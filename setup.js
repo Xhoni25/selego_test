@@ -75,7 +75,7 @@ const appEnvPath = path.join(__dirname, 'app', '.env');
 if (!fs.existsSync(appEnvPath)) {
   console.log('\n📝 Creating frontend environment file...');
   try {
-    const appEnvContent = 'VITE_API_URL=http://localhost:5000/api\n';
+    const appEnvContent = 'VITE_API_URL=http://localhost:5001/api\n';
     fs.writeFileSync(appEnvPath, appEnvContent);
     console.log('✅ Frontend environment file created');
   } catch (error) {
@@ -90,12 +90,9 @@ if (!fs.existsSync(appEnvPath)) {
 
 console.log('\n🎉 Setup completed successfully!');
 console.log('\n📋 Next steps:');
-console.log(
-  '1. Edit api/.env with your configuration (MongoDB, OpenAI API key, email settings)'
-);
-console.log(
-  '2. Set up MongoDB (see MONGODB_SETUP.md for detailed instructions)'
-);
+console.log('✅ MongoDB Atlas is pre-configured and ready to use');
+console.log('⚠️  Optional: Add your OpenAI API key to api/.env for AI features');
+console.log('⚠️  Optional: Add your Gmail credentials to api/.env for email notifications');
 console.log('3. Run "npm run dev" to start the development servers');
 console.log('\n📚 Documentation:');
 console.log('- README.md - Main documentation');

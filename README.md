@@ -23,7 +23,21 @@ npm run dev
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5001
 
-> **Note**: The project comes pre-configured with MongoDB Atlas. For AI features and email notifications, you'll need to add your OpenAI API key and Gmail credentials to `api/.env`.
+> **Note**: The project comes pre-configured with MongoDB Atlas and will work immediately. For AI features and email notifications, you can optionally add your OpenAI API key and Gmail credentials to `api/.env`.
+
+## ✅ What's Included (Ready to Use)
+
+- **Database**: MongoDB Atlas connection pre-configured
+- **Authentication**: JWT-based user authentication
+- **Core Features**: Team management, expense tracking, budget monitoring
+- **UI Components**: Complete NextUI component library
+- **Data Visualization**: Table, Cards, and Charts views
+- **TypeScript**: Full-stack TypeScript support
+
+## ⚙️ Optional Features (Require Setup)
+
+- **AI Categorization**: Add OpenAI API key to `api/.env`
+- **Email Notifications**: Add Gmail credentials to `api/.env`
 
 ## 🚀 Features
 
