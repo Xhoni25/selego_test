@@ -1,12 +1,13 @@
 # Deployment Guide
 
-This guide covers deploying the Expense Manager application to various platforms.
+This guide covers deploying the Expense Manager application to various platforms. The project is a full-stack TypeScript application with React frontend and Node.js/Express backend.
 
 ## Prerequisites
 
 - GitHub repository with your code
-- MongoDB database (Atlas recommended for production)
+- MongoDB database (Atlas recommended for production - pre-configured)
 - External service accounts (OpenAI, Email service)
+- Node.js 16+ installed locally
 
 ## Backend Deployment
 
@@ -29,7 +30,9 @@ This guide covers deploying the Expense Manager application to various platforms
    - Go to your project settings
    - Add all variables from `api/env.example`
    - Set `NODE_ENV=production`
+   - Set `PORT=5001` (or let Railway assign one)
    - Update `CLIENT_URL` to your frontend URL
+   - The MongoDB Atlas connection is pre-configured
 
 4. **Deploy**
    - Railway will automatically build and deploy
@@ -54,14 +57,15 @@ This guide covers deploying the Expense Manager application to various platforms
 
    ```bash
    heroku config:set NODE_ENV=production
-   heroku config:set MONGODB_URI=your-mongodb-uri
-   heroku config:set JWT_SECRET=your-jwt-secret
+   heroku config:set PORT=5001
+   heroku config:set MONGODB_URI=mongodb+srv://developer:XJQ9LxWDdlxpsc2k@cluster0.6tmqpln.mongodb.net/expense-manager?appName=Cluster0
+   heroku config:set JWT_SECRET=your-super-secure-jwt-secret
    heroku config:set OPENAI_API_KEY=your-openai-key
-   heroku config:set EMAIL_HOST=your-email-host
+   heroku config:set EMAIL_HOST=smtp.gmail.com
    heroku config:set EMAIL_PORT=587
-   heroku config:set EMAIL_USER=your-email
-   heroku config:set EMAIL_PASS=your-email-password
-   heroku config:set FROM_EMAIL=your-from-email
+   heroku config:set EMAIL_USER=your-email@gmail.com
+   heroku config:set EMAIL_PASS=your-app-password
+   heroku config:set FROM_EMAIL=noreply@yourdomain.com
    heroku config:set CLIENT_URL=your-frontend-url
    ```
 
@@ -88,9 +92,10 @@ This guide covers deploying the Expense Manager application to various platforms
 
 3. **Configure App**
 
-   - Set build command: `npm install`
+   - Set build command: `npm install && npm run build`
    - Set run command: `npm start`
-   - Add environment variables
+   - Add environment variables (same as Heroku above)
+   - Set Node.js version to 18+
 
 4. **Deploy**
    - Click "Create Resources"
@@ -116,11 +121,13 @@ This guide covers deploying the Expense Manager application to various platforms
    - Build Command: `npm run build`
    - Output Directory: `dist`
    - Install Command: `npm install`
+   - Node.js version: 18+
 
 4. **Set Environment Variables**
 
    - Add `VITE_API_URL` with your backend URL
    - Example: `https://your-backend.railway.app`
+   - Example: `https://your-app.herokuapp.com`
 
 5. **Deploy**
    - Click "Deploy"
@@ -181,10 +188,11 @@ This guide covers deploying the Expense Manager application to various platforms
      deploy:
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v2
-         - uses: actions/setup-node@v2
+         - uses: actions/checkout@v3
+         - uses: actions/setup-node@v3
            with:
              node-version: '18'
+             cache: 'npm'
          - run: cd app && npm install
          - run: cd app && npm run build
          - uses: peaceiris/actions-gh-pages@v3
@@ -198,6 +206,55 @@ This guide covers deploying the Expense Manager application to various platforms
    - Scroll to Pages section
    - Select "GitHub Actions" as source
 
+## TypeScript Build Considerations
+
+### Backend TypeScript Build
+
+The backend uses TypeScript and needs to be compiled before deployment:
+
+```bash
+# Build TypeScript to JavaScript
+cd api
+npm run build
+
+# This creates a dist/ folder with compiled JavaScript
+# The production start command runs: node dist/index.js
+```
+
+### Frontend TypeScript Build
+
+The frontend uses Vite which handles TypeScript compilation automatically:
+
+```bash
+# Build for production
+cd app
+npm run build
+
+# This creates a dist/ folder with optimized assets
+```
+
+### Build Scripts
+
+The project includes these build scripts:
+
+**Root level:**
+```bash
+npm run build    # Builds both frontend and backend
+npm run start    # Starts production servers
+```
+
+**Backend (api/):**
+```bash
+npm run build    # Compiles TypeScript to JavaScript
+npm start        # Runs compiled JavaScript
+```
+
+**Frontend (app/):**
+```bash
+npm run build    # Creates production build with Vite
+npm run preview  # Preview production build locally
+```
+
 ## Environment Configuration
 
 ### Production Environment Variables
@@ -206,8 +263,8 @@ This guide covers deploying the Expense Manager application to various platforms
 
 ```env
 NODE_ENV=production
-PORT=5000
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/expense-manager
+PORT=5001
+MONGODB_URI=mongodb+srv://developer:XJQ9LxWDdlxpsc2k@cluster0.6tmqpln.mongodb.net/expense-manager?appName=Cluster0
 JWT_SECRET=your-super-secure-jwt-secret
 OPENAI_API_KEY=sk-your-openai-api-key
 EMAIL_HOST=smtp.gmail.com
@@ -221,7 +278,7 @@ CLIENT_URL=https://your-frontend-domain.com
 **Frontend (.env)**
 
 ```env
-VITE_API_URL=https://your-backend-domain.com
+VITE_API_URL=https://your-backend-domain.com/api
 ```
 
 ## Database Setup

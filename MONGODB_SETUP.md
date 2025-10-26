@@ -1,6 +1,6 @@
 # MongoDB Setup Guide
 
-This guide will help you set up MongoDB for the Expense Manager application.
+This guide will help you set up MongoDB for the Expense Manager application. The project comes pre-configured with MongoDB Atlas, but you can also use local MongoDB for development.
 
 ## Option 1: Local MongoDB Installation
 
@@ -78,7 +78,15 @@ This guide will help you set up MongoDB for the Expense Manager application.
    sudo systemctl enable mongod
    ```
 
-## Option 2: MongoDB Atlas (Cloud - Recommended)
+## Option 2: MongoDB Atlas (Cloud - Recommended & Pre-configured)
+
+The project comes with a pre-configured MongoDB Atlas connection. The connection string is already set in the `.env` file:
+
+```env
+MONGODB_URI=mongodb+srv://developer:XJQ9LxWDdlxpsc2k@cluster0.6tmqpln.mongodb.net/expense-manager?appName=Cluster0
+```
+
+### If you want to use your own MongoDB Atlas cluster:
 
 1. **Create MongoDB Atlas Account**
 
@@ -113,6 +121,7 @@ This guide will help you set up MongoDB for the Expense Manager application.
    - Choose "Connect your application"
    - Copy the connection string
    - Replace `<password>` with your database user password
+   - Update the `MONGODB_URI` in your `api/.env` file
 
 ## Database Configuration
 
@@ -134,8 +143,68 @@ This guide will help you set up MongoDB for the Expense Manager application.
 The application will automatically create the database and collections when you first run it. The collections created are:
 
 - `teams` - Stores team information and budgets
-- `expenses` - Stores expense records
+- `expenses` - Stores expense records  
 - `users` - Stores user accounts
+
+### Database Schema
+
+The application uses Mongoose schemas with the following structure:
+
+**Teams Collection:**
+```typescript
+{
+  _id: ObjectId,
+  name: String,
+  budget: Number,
+  members: [{
+    user_id: String,
+    name: String,
+    email: String,
+    role: String
+  }],
+  total_spent: Number,
+  created_by: ObjectId,
+  alerts_sent: {
+    eighty_percent: Boolean,
+    hundred_percent: Boolean
+  },
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+**Expenses Collection:**
+```typescript
+{
+  _id: ObjectId,
+  team_id: ObjectId,
+  amount: Number,
+  description: String,
+  category: String,
+  ai_suggested_category: String,
+  status: String,
+  created_by: ObjectId,
+  expense_date: Date,
+  receipt_url: String,
+  notes: String,
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+**Users Collection:**
+```typescript
+{
+  _id: ObjectId,
+  name: String,
+  email: String,
+  password: String,
+  role: String,
+  is_active: Boolean,
+  created_at: Date,
+  updated_at: Date
+}
+```
 
 ## Testing MongoDB Connection
 
@@ -249,13 +318,34 @@ The application will automatically create the database and collections when you 
 - Set up MongoDB monitoring tools
 - Monitor logs for errors
 
+## Quick Start
+
+Since the project comes pre-configured with MongoDB Atlas:
+
+1. **Start the application:**
+   ```bash
+   npm run dev
+   ```
+
+2. **Check the console for successful database connection:**
+   - Backend should show: "Connected to MongoDB"
+   - Frontend should be available at: http://localhost:3000
+   - Backend API should be available at: http://localhost:5001
+
+3. **Create your first user account:**
+   - Go to http://localhost:3000/register
+   - Fill out the registration form
+   - Login and start creating teams and expenses
+
 ## Next Steps
 
 Once MongoDB is set up:
 
-1. Update your `.env` file with the correct connection string
+1. Update your `.env` file with the correct connection string (if using your own cluster)
 2. Start the application: `npm run dev`
 3. Check the console for successful database connection
 4. Create your first user account through the registration page
+5. Test the AI categorization feature by creating expenses
+6. Test email notifications by setting up email credentials
 
 For additional help, refer to the [MongoDB Documentation](https://docs.mongodb.com/) or create an issue in the repository.
