@@ -1,216 +1,413 @@
 # Expense Manager
 
-A comprehensive team expense management system built with React, Node.js, Express, and MongoDB. Features AI-powered expense categorization, budget monitoring, and email alerts.
+A comprehensive team expense management system built with React, Node.js, Express, and MongoDB. Features AI-powered expense categorization, budget monitoring, email alerts, and modern data visualization.
 
-## Features
+## ⚡ Quick Start
 
-- **Team Management**: Create and manage teams with individual budgets
+```bash
+# 1. Clone the repository
+git clone https://github.com/Xhoni25/selego_test.git
+cd selego_test
+
+# 2. Install dependencies
+npm run install-all
+
+# 3. Setup environment files
+npm run setup
+
+# 4. Start the application
+npm run dev
+```
+
+**That's it!** 🎉 
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5001
+
+> **Note**: The project comes pre-configured with MongoDB Atlas. For AI features and email notifications, you'll need to add your OpenAI API key and Gmail credentials to `api/.env`.
+
+## 🚀 Features
+
+- **Team Management**: Create, edit, and delete teams with individual budgets
 - **Expense Tracking**: Add, edit, and categorize expenses with AI suggestions
 - **Budget Monitoring**: Real-time budget utilization tracking with visual indicators
 - **Email Alerts**: Automatic notifications when teams reach 80% and 100% budget thresholds
 - **AI Insights**: Smart expense categorization and spending pattern analysis
+- **Data Visualization**: Table, Cards, and Charts views for expense analysis
+- **Smart Filtering**: Search, team, and category filters with clear functionality
 - **Modern UI**: Built with NextUI components and responsive design
 - **Real-time Updates**: TanStack Query for efficient data management
+- **TypeScript**: Full-stack TypeScript for type safety and better development experience
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Backend
-
-- Node.js with Express.js
-- MongoDB with Mongoose
-- JWT authentication
-- OpenAI API for AI features
-- Nodemailer for email notifications
-- Joi for validation
+- **Node.js** with Express.js
+- **TypeScript** for type safety
+- **MongoDB** with Mongoose ODM
+- **JWT** authentication
+- **OpenAI API** for AI features
+- **Nodemailer** for email notifications
+- **Joi** for validation
+- **Helmet** for security
+- **CORS** for cross-origin requests
 
 ### Frontend
+- **React 18** with Vite
+- **TypeScript** (TSX) for type safety
+- **NextUI** component library
+- **TanStack Query** for data fetching
+- **React Hook Form** for form management
+- **React Router** for navigation
+- **Tailwind CSS** for styling
+- **Axios** for API requests
 
-- React 18 with Vite
-- NextUI component library
-- TanStack Query for data fetching
-- React Hook Form for form management
-- React Router for navigation
-- Tailwind CSS for styling
-
-## Prerequisites
+## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- Node.js (v16 or higher)
-- MongoDB (v4.4 or higher)
-- Git
+- **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
+- **Git** - [Download here](https://git-scm.com/)
+- **MongoDB** (optional for local development) - [Download here](https://www.mongodb.com/try/download/community)
 
-## Installation
+## 🚀 Quick Start
 
-1. **Clone the repository**
+### 1. Clone the Repository
 
-   ```bash
-   git clone <repository-url>
-   cd expense-manager-project
-   ```
+```bash
+git clone https://github.com/Xhoni25/selego_test.git
+cd selego_test
+```
 
-2. **Run the setup script**
+### 2. Install Dependencies
 
-   ```bash
-   npm run setup
-   ```
+```bash
+# Install all dependencies (both frontend and backend)
+npm run install-all
 
-   This will install all dependencies and create the environment file.
+# Or install manually
+npm install
+cd api && npm install
+cd ../app && npm install
+cd ..
+```
 
-3. **Configure environment variables**
+### 3. Environment Setup
 
-   Edit `api/.env` with your configuration:
+The project includes a setup script that creates the necessary environment files:
 
+```bash
+npm run setup
+```
+
+This will create:
+- `api/.env` - Backend environment variables
+- `app/.env` - Frontend environment variables
+
+### 4. Configure Environment Variables
+
+#### Backend Configuration (`api/.env`)
+
+```env
+# Server Configuration
+PORT=5001
+MONGODB_URI=mongodb+srv://developer:XJQ9LxWDdlxpsc2k@cluster0.6tmqpln.mongodb.net/expense-manager?appName=Cluster0
+
+# JWT Secret (change this in production)
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# OpenAI API (for AI features)
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Email Configuration (Gmail SMTP)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+FROM_EMAIL=noreply@expensemanager.com
+
+# CORS Configuration
+CLIENT_URL=http://localhost:3000
+```
+
+#### Frontend Configuration (`app/.env`)
+
+```env
+# API Configuration
+VITE_API_URL=http://localhost:5001/api
+```
+
+### 5. Database Setup
+
+#### Option A: MongoDB Atlas (Recommended - Already Configured)
+
+The project is pre-configured with MongoDB Atlas. The connection string is already set in the `.env` file.
+
+#### Option B: Local MongoDB
+
+If you prefer local MongoDB:
+
+1. Install MongoDB locally
+2. Start MongoDB service
+3. Update `MONGODB_URI` in `api/.env`:
    ```env
-   PORT=5000
    MONGODB_URI=mongodb://localhost:27017/expense-manager
-   JWT_SECRET=your-super-secret-jwt-key-here
-   OPENAI_API_KEY=your-openai-api-key-here
-   EMAIL_HOST=smtp.gmail.com
-   EMAIL_PORT=587
+   ```
+
+### 6. External Services Setup
+
+#### OpenAI API (Required for AI Features)
+
+1. Sign up at [OpenAI Platform](https://platform.openai.com)
+2. Generate an API key
+3. Add it to `api/.env`:
+   ```env
+   OPENAI_API_KEY=sk-your-api-key-here
+   ```
+
+#### Email Service (Required for Notifications)
+
+1. Use Gmail SMTP (recommended for development)
+2. Enable 2-factor authentication on your Gmail account
+3. Generate an app password:
+   - Go to Google Account settings
+   - Security → 2-Step Verification → App passwords
+   - Generate password for "Mail"
+4. Add credentials to `api/.env`:
+   ```env
    EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-   FROM_EMAIL=noreply@expensemanager.com
+   EMAIL_PASS=your-16-character-app-password
    ```
 
-4. **Set up MongoDB**
+## 🏃‍♂️ Running the Application
 
-   **Option A: Local MongoDB**
+### Development Mode
 
-   - Install MongoDB locally
-   - Start MongoDB service
-   - The application will connect to `mongodb://localhost:27017/expense-manager`
+Start both frontend and backend concurrently:
 
-   **Option B: MongoDB Atlas (Cloud)**
+```bash
+npm run dev
+```
 
-   - Create a free account at [MongoDB Atlas](https://www.mongodb.com/atlas)
-   - Create a new cluster
-   - Get your connection string
-   - Update `MONGODB_URI` in your `.env` file
+This will start:
+- **Backend**: http://localhost:5001
+- **Frontend**: http://localhost:3000
 
-5. **Set up external services**
+### Individual Services
 
-   **OpenAI API (for AI features)**
+#### Backend Only
+```bash
+npm run server
+# or
+cd api && npm run dev
+```
 
-   - Sign up at [OpenAI](https://platform.openai.com)
-   - Generate an API key
-   - Add it to your `.env` file
+#### Frontend Only
+```bash
+npm run client
+# or
+cd app && npm run dev
+```
 
-   **Email Service (for notifications)**
+### Production Build
 
-   - Use Gmail SMTP (recommended for development)
-   - Enable 2-factor authentication
-   - Generate an app password
-   - Add credentials to your `.env` file
+```bash
+# Build both frontend and backend
+npm run build
 
-## Running the Application
+# Start production servers
+npm start
+```
 
-1. **Start the development servers**
+## 🌐 Access Points
 
-   ```bash
-   npm run dev
-   ```
+- **Frontend Application**: http://localhost:3000
+- **Backend API**: http://localhost:5001
+- **API Health Check**: http://localhost:5001/api/health
 
-   This will start both the backend (port 5000) and frontend (port 3000) concurrently.
-
-2. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-
-## API Documentation
+## 📚 API Documentation
 
 ### Authentication Endpoints
 
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `POST` | `/api/auth/register` | Register a new user | `{name, email, password, confirmPassword}` |
+| `POST` | `/api/auth/login` | Login user | `{email, password}` |
+| `GET` | `/api/auth/me` | Get current user | Headers: `Authorization: Bearer <token>` |
 
 ### Team Endpoints
 
-- `POST /api/teams/search` - Search teams
-- `GET /api/teams/:id` - Get team by ID
-- `POST /api/teams` - Create new team
-- `PUT /api/teams/:id` - Update team
-- `GET /api/teams/:id/expenses` - Get team expenses
-- `POST /api/teams/:id/check-budget` - Check budget alerts
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `GET` | `/api/teams` | Get all teams for user | Headers: `Authorization: Bearer <token>` |
+| `POST` | `/api/teams/search` | Search teams | `{query, filters}` |
+| `GET` | `/api/teams/:id` | Get team by ID | Headers: `Authorization: Bearer <token>` |
+| `POST` | `/api/teams` | Create new team | `{name, budget, members}` |
+| `PUT` | `/api/teams/:id` | Update team | `{name, budget}` |
+| `DELETE` | `/api/teams/:id` | Delete team | Headers: `Authorization: Bearer <token>` |
 
 ### Expense Endpoints
 
-- `POST /api/expenses/search` - Search expenses
-- `GET /api/expenses/:id` - Get expense by ID
-- `POST /api/expenses` - Create new expense
-- `PUT /api/expenses/:id` - Update expense
-- `DELETE /api/expenses/:id` - Delete expense
-- `GET /api/expenses/:teamId/insights` - Get AI insights
+| Method | Endpoint | Description | Body |
+|--------|----------|-------------|------|
+| `GET` | `/api/expenses` | Get all expenses for user | Query: `?team_id=&category=&search=` |
+| `POST` | `/api/expenses/search` | Search expenses | `{query, filters}` |
+| `GET` | `/api/expenses/:id` | Get expense by ID | Headers: `Authorization: Bearer <token>` |
+| `POST` | `/api/expenses` | Create new expense | `{team_id, amount, description, category, expense_date, notes}` |
+| `PUT` | `/api/expenses/:id` | Update expense | `{amount, description, category, status, notes}` |
+| `DELETE` | `/api/expenses/:id` | Delete expense | Headers: `Authorization: Bearer <token>` |
 
-## Project Structure
+### Response Format
+
+All API responses follow this format:
+
+```json
+{
+  "ok": true,
+  "data": { ... },
+  "message": "Success message"
+}
+```
+
+Error responses:
+
+```json
+{
+  "ok": false,
+  "code": "ERROR_CODE",
+  "message": "Error description"
+}
+```
+
+## 📁 Project Structure
 
 ```
 expense-manager-project/
-├── api/                          # Backend API
+├── api/                          # Backend API (Node.js/Express/TypeScript)
 │   ├── src/
-│   │   ├── models/              # MongoDB models
-│   │   ├── routes/              # API routes
-│   │   ├── services/            # External services
+│   │   ├── models/              # MongoDB schemas (Team, Expense, User)
+│   │   │   ├── Team.ts
+│   │   │   ├── Expense.ts
+│   │   │   └── User.ts
+│   │   ├── routes/              # API route handlers
+│   │   │   ├── auth.ts
+│   │   │   ├── teams.ts
+│   │   │   └── expenses.ts
+│   │   ├── services/            # External service integrations
+│   │   │   ├── aiService.ts     # OpenAI integration
+│   │   │   └── emailService.ts  # Email notifications
 │   │   ├── middleware/          # Custom middleware
-│   │   └── index.js             # Server entry point
+│   │   │   └── auth.ts          # JWT authentication
+│   │   ├── types/               # TypeScript type definitions
+│   │   │   └── index.ts
+│   │   ├── index.ts             # Server entry point
+│   │   └── index.js             # JavaScript fallback
 │   ├── package.json
+│   ├── tsconfig.json
+│   ├── .env                     # Environment variables
 │   └── env.example
-├── app/                         # Frontend React app
+├── app/                         # Frontend React app (TypeScript)
 │   ├── src/
-│   │   ├── components/          # Reusable components
-│   │   ├── pages/               # Page components
-│   │   ├── services/            # API service
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   ├── components/          # Reusable UI components
+│   │   │   ├── Modal.tsx
+│   │   │   ├── LoadingSpinner.tsx
+│   │   │   ├── ConfirmDialog.tsx
+│   │   │   ├── EmptyState.tsx
+│   │   │   ├── StatusBadge.tsx
+│   │   │   └── Layout.tsx
+│   │   ├── pages/               # Main application pages
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Teams.tsx
+│   │   │   └── Expenses.tsx
+│   │   ├── contexts/            # React context providers
+│   │   │   └── AuthContext.tsx
+│   │   ├── services/            # API service layer
+│   │   │   └── api.ts
+│   │   ├── types/               # TypeScript type definitions
+│   │   │   └── index.ts
+│   │   ├── App.tsx              # Main app component
+│   │   ├── main.tsx             # React entry point
+│   │   └── index.css            # Global styles
 │   ├── package.json
-│   └── vite.config.js
-├── package.json                 # Root package.json
+│   ├── vite.config.ts           # Vite configuration
+│   ├── tailwind.config.js       # Tailwind CSS config
+│   ├── tsconfig.json            # TypeScript config
+│   ├── tsconfig.node.json       # Node TypeScript config
+│   ├── .env                     # Environment variables
+│   └── index.html
+├── package.json                 # Root package.json (monorepo)
 ├── .gitignore                   # Git ignore rules
-└── README.md                    # This file
+├── README.md                    # This file
+├── DEPLOYMENT.md                # Deployment instructions
+├── MONGODB_SETUP.md             # Database setup guide
+└── setup.js                     # Automated setup script
 ```
 
-## Key Features Explained
+## ✨ Key Features Explained
 
-### AI-Powered Expense Categorization
+### 🤖 AI-Powered Expense Categorization
 
-- Automatically suggests expense categories based on descriptions
-- Uses OpenAI's GPT-3.5-turbo model
-- Fallback to 'other' category if AI fails
+- **Smart Suggestions**: Automatically suggests expense categories based on descriptions
+- **OpenAI Integration**: Uses GPT-3.5-turbo model for intelligent categorization
+- **Fallback System**: Defaults to 'other' category if AI fails
+- **Learning**: Improves suggestions over time with usage patterns
 
-### Budget Monitoring
+### 📊 Budget Monitoring & Visualization
 
-- Real-time budget utilization calculation
-- Visual progress indicators
-- Automatic email alerts at 80% and 100% thresholds
+- **Real-time Tracking**: Live budget utilization calculation
+- **Visual Indicators**: Progress bars and color-coded status indicators
+- **Multiple Views**: Table, Cards, and Charts views for data analysis
+- **Smart Filtering**: Search, team, and category filters with clear functionality
+- **Threshold Alerts**: Automatic notifications at 80% and 100% budget usage
 
-### Email Notifications
+### 📧 Email Notifications
 
-- Sends alerts to all team members
-- Includes budget utilization details
-- Configurable via environment variables
+- **Multi-threshold Alerts**: Notifications at 80% and 100% budget usage
+- **Team-wide Notifications**: Sends alerts to all team members
+- **Rich Content**: Includes budget utilization details and visual indicators
+- **Configurable**: Easily customizable via environment variables
 
-### Reusable Components
+### 🧩 Reusable Component System
 
-- Modal system for consistent UI
-- Loading spinners and empty states
-- Status badges and confirm dialogs
-- Centralized API service
+- **Modal System**: Consistent UI for forms and confirmations
+- **Loading States**: Spinners and skeleton loaders
+- **Empty States**: User-friendly messages when no data is available
+- **Status Badges**: Visual indicators for expense and team statuses
+- **Centralized API**: Single service layer for all API communications
 
-## Development
+### 🔐 Security & Authentication
+
+- **JWT Tokens**: Secure authentication with JSON Web Tokens
+- **Password Hashing**: Bcrypt for secure password storage
+- **CORS Protection**: Cross-origin request security
+- **Helmet Security**: Additional security headers
+- **Input Validation**: Joi schema validation for all inputs
+
+### 📱 Modern UI/UX
+
+- **NextUI Components**: Beautiful, accessible UI components
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Dark Mode Support**: Built-in dark/light theme support
+- **Smooth Animations**: Framer Motion for delightful interactions
+- **TypeScript**: Full type safety for better development experience
+
+## 🛠️ Development
 
 ### Adding New Features
 
 1. **Backend**: Add routes in `api/src/routes/`
 2. **Frontend**: Add pages in `app/src/pages/`
 3. **Components**: Create reusable components in `app/src/components/`
+4. **Types**: Update TypeScript definitions in `api/src/types/` and `app/src/types/`
 
 ### Database Schema
 
-**Teams Collection**
+#### Teams Collection
 
-```javascript
+```typescript
 {
+  _id: ObjectId,
   name: String,
   budget: Number,
   members: [{
@@ -220,85 +417,238 @@ expense-manager-project/
     role: String
   }],
   total_spent: Number,
-  budget_alerts_sent: {
+  created_by: ObjectId,
+  alerts_sent: {
     eighty_percent: Boolean,
     hundred_percent: Boolean
-  }
+  },
+  created_at: Date,
+  updated_at: Date
 }
 ```
 
-**Expenses Collection**
+#### Expenses Collection
 
-```javascript
+```typescript
 {
+  _id: ObjectId,
   team_id: ObjectId,
   amount: Number,
   description: String,
   category: String,
   ai_suggested_category: String,
   status: String,
-  created_by: String,
+  created_by: ObjectId,
   expense_date: Date,
-  notes: String
+  receipt_url: String,
+  notes: String,
+  created_at: Date,
+  updated_at: Date
 }
 ```
 
-## Deployment
+#### Users Collection
 
-### Backend Deployment (Heroku/Railway)
+```typescript
+{
+  _id: ObjectId,
+  name: String,
+  email: String,
+  password: String,
+  role: String,
+  is_active: Boolean,
+  created_at: Date,
+  updated_at: Date
+}
+```
 
-1. Set environment variables in your hosting platform
-2. Deploy the `api` folder
-3. Ensure MongoDB connection is accessible
+### Available Scripts
+
+#### Root Level
+```bash
+npm run dev          # Start both frontend and backend
+npm run server       # Start backend only
+npm run client       # Start frontend only
+npm run build        # Build both for production
+npm run start        # Start production servers
+npm run install-all  # Install all dependencies
+npm run setup        # Setup environment files
+```
+
+#### Backend (api/)
+```bash
+npm run dev          # Start with nodemon
+npm run build        # Build TypeScript
+npm start            # Start production
+```
+
+#### Frontend (app/)
+```bash
+npm run dev          # Start Vite dev server
+npm run build        # Build for production
+npm run preview      # Preview production build
+```
+
+## 🚀 Deployment
+
+### Backend Deployment (Railway/Heroku)
+
+1. **Railway (Recommended)**
+   ```bash
+   # Install Railway CLI
+   npm install -g @railway/cli
+   
+   # Login and deploy
+   railway login
+   railway init
+   railway up
+   ```
+
+2. **Heroku**
+   ```bash
+   # Install Heroku CLI
+   # Create new app
+   heroku create your-app-name
+   
+   # Set environment variables
+   heroku config:set MONGODB_URI=your-mongodb-uri
+   heroku config:set JWT_SECRET=your-jwt-secret
+   # ... other variables
+   
+   # Deploy
+   git push heroku main
+   ```
 
 ### Frontend Deployment (Vercel/Netlify)
 
-1. Build the frontend: `cd app && npm run build`
-2. Deploy the `dist` folder
-3. Update API URLs for production
+1. **Vercel (Recommended)**
+   ```bash
+   # Install Vercel CLI
+   npm install -g vercel
+   
+   # Deploy
+   cd app
+   vercel
+   ```
 
-## Troubleshooting
+2. **Netlify**
+   ```bash
+   # Build the project
+   cd app && npm run build
+   
+   # Deploy dist folder to Netlify
+   ```
+
+### Environment Variables for Production
+
+Make sure to set these in your hosting platform:
+
+**Backend:**
+- `MONGODB_URI`
+- `JWT_SECRET`
+- `OPENAI_API_KEY`
+- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`
+- `CLIENT_URL` (your frontend URL)
+
+**Frontend:**
+- `VITE_API_URL` (your backend API URL)
+
+## 🔧 Troubleshooting
 
 ### Common Issues
 
-1. **MongoDB Connection Error**
+#### 1. MongoDB Connection Error
+```bash
+# Check if MongoDB is running
+mongosh --eval "db.adminCommand('ismaster')"
 
-   - Ensure MongoDB is running
-   - Check connection string in `.env`
-   - Verify network access for cloud MongoDB
+# Verify connection string
+echo $MONGODB_URI
+```
 
-2. **OpenAI API Error**
+#### 2. Port Already in Use
+```bash
+# Kill process on port 5001
+lsof -ti:5001 | xargs kill -9
 
-   - Verify API key is correct
-   - Check API usage limits
-   - Ensure sufficient credits
+# Or use different port
+PORT=5002 npm run dev
+```
 
-3. **Email Not Working**
+#### 3. OpenAI API Error
+- Verify API key is correct
+- Check API usage limits and billing
+- Ensure sufficient credits
 
-   - Verify SMTP credentials
-   - Check Gmail app password
-   - Ensure 2FA is enabled
+#### 4. Email Not Working
+- Verify Gmail app password (16 characters)
+- Ensure 2FA is enabled
+- Check SMTP settings
 
-4. **CORS Issues**
-   - Check `CLIENT_URL` in backend `.env`
-   - Verify frontend URL matches
+#### 5. CORS Issues
+- Check `CLIENT_URL` in backend `.env`
+- Verify frontend URL matches exactly
+- Clear browser cache
 
-## Contributing
+#### 6. TypeScript Errors
+```bash
+# Clean and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Check TypeScript config
+npx tsc --noEmit
+```
+
+### Debug Mode
+
+Enable debug logging:
+
+```bash
+# Backend
+DEBUG=* npm run dev
+
+# Frontend
+VITE_DEBUG=true npm run dev
+```
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+4. Test thoroughly: `npm test`
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to the branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
 
-## License
+### Development Guidelines
 
-This project is licensed under the MIT License.
+- Follow TypeScript best practices
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation
+- Follow the existing code style
 
-## Support
+## 📄 License
 
-For support, email support@expensemanager.com or create an issue in the repository.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check this README and the `/docs` folder
+- **Issues**: Create an issue on [GitHub](https://github.com/Xhoni25/selego_test/issues)
+- **Email**: support@expensemanager.com
+
+## 🙏 Acknowledgments
+
+- [NextUI](https://nextui.org/) for beautiful components
+- [TanStack Query](https://tanstack.com/query) for data fetching
+- [OpenAI](https://openai.com/) for AI capabilities
+- [MongoDB Atlas](https://www.mongodb.com/atlas) for database hosting
 
 ---
 
-Built with ❤️ using modern web technologies
+**Built with ❤️ using modern web technologies**
+
+*Last updated: December 2024*
