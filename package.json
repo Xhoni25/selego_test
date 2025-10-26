@@ -1,0 +1,27 @@
+{
+  "name": "expense-manager",
+  "version": "1.0.0",
+  "description": "Team expense management system with AI-powered insights",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd api && npm run dev",
+    "client": "cd app && npm run dev",
+    "install-all": "npm install && cd api && npm install && cd ../app && npm install",
+    "build": "cd app && npm run build",
+    "start": "cd api && npm start"
+  },
+  "keywords": [
+    "expense",
+    "management",
+    "team",
+    "budget",
+    "ai"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
