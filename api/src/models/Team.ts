@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { ITeam, ITeamMember } from '../types';
 
 const teamMemberSchema = new Schema<ITeamMember>({

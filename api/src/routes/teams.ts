@@ -4,7 +4,7 @@ import Team from '../models/Team';
 import Expense from '../models/Expense';
 import { protect } from '../middleware/auth';
 import emailService from '../services/emailService';
-import { CreateTeamRequest, UpdateTeamRequest, AuthRequest } from '../types';
+import { CreateTeamRequest, UpdateTeamRequest } from '../types';
 
 const router = Router();
 
@@ -38,32 +38,28 @@ const updateTeamSchema = Joi.object({
 });
 
 // Get all teams for user
-router.get(
-  '/',
-  protect,
-  async (req: AuthRequest, res: Response): Promise<void> => {
-    try {
-      const teams = await Team.find({
-        $or: [
-          { created_by: req.user?._id.toString() },
-          { 'members.user_id': req.user?._id.toString() },
-        ],
-      }).sort({ createdAt: -1 });
+router.get('/', protect, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const teams = await Team.find({
+      $or: [
+        { created_by: (req as any).user?._id.toString() },
+        { 'members.user_id': (req as any).user?._id.toString() },
+      ],
+    }).sort({ createdAt: -1 });
 
-      res.json({
-        ok: true,
-        data: teams,
-      });
-    } catch (error) {
-      console.error('Get teams error:', error);
-      res.status(500).json({
-        ok: false,
-        code: 'SERVER_ERROR',
-        message: 'Failed to fetch teams',
-      });
-    }
+    res.json({
+      ok: true,
+      data: teams,
+    });
+  } catch (error) {
+    console.error('Get teams error:', error);
+    res.status(500).json({
+      ok: false,
+      code: 'SERVER_ERROR',
+      message: 'Failed to fetch teams',
+    });
   }
-);
+});
 
 // Get single team
 router.get(
@@ -71,7 +67,7 @@ router.get(
   protect,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const team = await Team.findById(req.params.id);
+      const team = await Team.findById((req as any).params.id);
 
       if (!team) {
         res.status(404).json({
@@ -84,9 +80,9 @@ router.get(
 
       // Check if user has access to this team
       const hasAccess =
-        team.created_by === req.user?._id.toString() ||
+        team.created_by === (req as any).user?._id.toString() ||
         team.members.some(
-          member => member.user_id === req.user?._id.toString()
+          member => member.user_id === (req as any).user?._id.toString()
         );
 
       if (!hasAccess) {
@@ -117,14 +113,14 @@ router.get(
 router.post(
   '/',
   protect,
-  async (req: AuthRequest, res: Response): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     try {
       const { error, value } = createTeamSchema.validate(req.body);
       if (error) {
         res.status(400).json({
           ok: false,
           code: 'VALIDATION_ERROR',
-          message: error.details[0].message,
+          message: error.details[0]?.message || 'Validation error',
         });
         return;
       }
@@ -135,9 +131,9 @@ router.post(
         name,
         budget,
         members,
-        created_by: req.user?._id.toString(),
-        created_by_name: req.user?.name || '',
-        created_by_email: req.user?.email || '',
+        created_by: (req as any).user?._id.toString(),
+        created_by_name: (req as any).user?.name || '',
+        created_by_email: (req as any).user?.email || '',
       });
 
       await team.save();
@@ -168,12 +164,12 @@ router.put(
         res.status(400).json({
           ok: false,
           code: 'VALIDATION_ERROR',
-          message: error.details[0].message,
+          message: error.details[0]?.message || 'Validation error',
         });
         return;
       }
 
-      const team = await Team.findById(req.params.id);
+      const team = await Team.findById((req as any).params.id);
 
       if (!team) {
         res.status(404).json({
@@ -185,10 +181,11 @@ router.put(
       }
 
       // Check if user is team creator or admin
-      const isCreator = team.created_by === req.user?._id.toString();
+      const isCreator = team.created_by === (req as any).user?._id.toString();
       const isAdmin = team.members.find(
         member =>
-          member.user_id === req.user?._id.toString() && member.role === 'admin'
+          member.user_id === (req as any).user?._id.toString() &&
+          member.role === 'admin'
       );
 
       if (!isCreator && !isAdmin) {
@@ -201,7 +198,7 @@ router.put(
       }
 
       const updatedTeam = await Team.findByIdAndUpdate(
-        req.params.id,
+        (req as any).params.id,
         value as UpdateTeamRequest,
         { new: true, runValidators: true }
       );
@@ -227,7 +224,7 @@ router.delete(
   protect,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const team = await Team.findById(req.params.id);
+      const team = await Team.findById((req as any).params.id);
 
       if (!team) {
         res.status(404).json({
@@ -239,7 +236,7 @@ router.delete(
       }
 
       // Only team creator can delete
-      if (team.created_by !== req.user?._id.toString()) {
+      if (team.created_by !== (req as any).user?._id.toString()) {
         res.status(403).json({
           ok: false,
           code: 'ACCESS_DENIED',
@@ -249,10 +246,10 @@ router.delete(
       }
 
       // Delete associated expenses
-      await Expense.deleteMany({ team_id: req.params.id });
+      await Expense.deleteMany({ team_id: (req as any).params.id });
 
       // Delete team
-      await Team.findByIdAndDelete(req.params.id);
+      await Team.findByIdAndDelete((req as any).params.id);
 
       res.json({
         ok: true,
@@ -275,7 +272,7 @@ router.get(
   protect,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const team = await Team.findById(req.params.id);
+      const team = await Team.findById((req as any).params.id);
 
       if (!team) {
         res.status(404).json({
@@ -288,9 +285,9 @@ router.get(
 
       // Check access
       const hasAccess =
-        team.created_by === req.user?._id.toString() ||
+        team.created_by === (req as any).user?._id.toString() ||
         team.members.some(
-          member => member.user_id === req.user?._id.toString()
+          member => member.user_id === (req as any).user?._id.toString()
         );
 
       if (!hasAccess) {
@@ -302,7 +299,7 @@ router.get(
         return;
       }
 
-      const expenses = await Expense.find({ team_id: req.params.id })
+      const expenses = await Expense.find({ team_id: (req as any).params.id })
         .sort({ createdAt: -1 })
         .limit(50);
 
@@ -327,7 +324,7 @@ router.get(
   protect,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const team = await Team.findById(req.params.id);
+      const team = await Team.findById((req as any).params.id);
 
       if (!team) {
         res.status(404).json({
@@ -340,9 +337,9 @@ router.get(
 
       // Check access
       const hasAccess =
-        team.created_by === req.user?._id.toString() ||
+        team.created_by === (req as any).user?._id.toString() ||
         team.members.some(
-          member => member.user_id === req.user?._id.toString()
+          member => member.user_id === (req as any).user?._id.toString()
         );
 
       if (!hasAccess) {

@@ -1,11 +1,10 @@
 import { Router, Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Joi from 'joi';
 import User from '../models/User';
 import emailService from '../services/emailService';
 import { protect } from '../middleware/auth';
-import { LoginRequest, RegisterRequest, AuthRequest } from '../types';
+import { LoginRequest, RegisterRequest } from '../types';
 
 const router = Router();
 
@@ -29,7 +28,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({
         ok: false,
         code: 'VALIDATION_ERROR',
-        message: error.details[0].message,
+        message: error.details[0]?.message || 'Validation error',
       });
       return;
     }
@@ -57,7 +56,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     // Generate token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'fallback-secret',
+      process.env['JWT_SECRET'] || 'fallback-secret',
       { expiresIn: '7d' }
     );
 
@@ -86,7 +85,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({
         ok: false,
         code: 'VALIDATION_ERROR',
-        message: error.details[0].message,
+        message: error.details[0]?.message || 'Validation error',
       });
       return;
     }
@@ -128,7 +127,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     // Generate token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'fallback-secret',
+      process.env['JWT_SECRET'] || 'fallback-secret',
       { expiresIn: '7d' }
     );
 
@@ -153,11 +152,11 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 router.get(
   '/me',
   protect,
-  async (req: AuthRequest, res: Response): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     res.json({
       ok: true,
       data: {
-        user: req.user?.toJSON(),
+        user: (req as any).user?.toJSON(),
       },
     });
   }

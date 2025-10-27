@@ -10,7 +10,6 @@ import {
 } from '@nextui-org/react';
 import {
   Plus,
-  Users,
   Receipt,
   DollarSign,
   TrendingUp,
@@ -30,7 +29,7 @@ const Dashboard: React.FC = () => {
 
   const { data: expenses, isLoading: expensesLoading } = useQuery({
     queryKey: ['expenses'],
-    queryFn: () => api.get<Expense[]>('/expenses'),
+    queryFn: () => api.get<{ expenses: Expense[] }>('/expenses'),
   });
 
   const isLoading = teamsLoading || expensesLoading;
@@ -40,7 +39,7 @@ const Dashboard: React.FC = () => {
   }
 
   const teamsData = teams?.data || [];
-  const expensesData = expenses?.data || [];
+  const expensesData = expenses?.data?.expenses || [];
 
   const totalBudget = teamsData.reduce((sum, team) => sum + team.budget, 0);
   const totalSpent = teamsData.reduce((sum, team) => sum + team.total_spent, 0);
@@ -230,10 +229,10 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div className='text-right'>
                       <p className='text-sm font-medium text-gray-900 dark:text-white'>
-                        {team.budget_utilization.toFixed(1)}%
+                        {(team.budget_utilization || 0).toFixed(1)}%
                       </p>
                       <Progress
-                        value={team.budget_utilization}
+                        value={team.budget_utilization || 0}
                         color={
                           team.is_over_budget
                             ? 'danger'

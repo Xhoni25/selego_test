@@ -2,11 +2,11 @@
   "name": "expense-manager-api",
   "version": "1.0.0",
   "description": "Backend API for expense management system",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
     "dev:build": "tsc && npm run start"
   },
   "dependencies": {

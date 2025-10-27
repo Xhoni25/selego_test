@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { IUser } from '../types';
 
@@ -51,7 +51,7 @@ userSchema.pre('save', async function (this: IUser, next) {
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function (
+userSchema.methods['comparePassword'] = async function (
   this: IUser,
   candidatePassword: string
 ): Promise<boolean> {
@@ -59,7 +59,7 @@ userSchema.methods.comparePassword = async function (
 };
 
 // Remove password from JSON output
-userSchema.methods.toJSON = function (this: IUser) {
+userSchema.methods['toJSON'] = function (this: IUser) {
   const user = this.toObject();
   delete user.password;
   return user;

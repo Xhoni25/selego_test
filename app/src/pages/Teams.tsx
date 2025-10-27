@@ -351,7 +351,7 @@ const Teams: React.FC = () => {
                 </Button>
                 <Button
                   color='primary'
-                  onPress={handleSubmit(handleCreateTeam)}
+                  onPress={() => handleSubmit(handleCreateTeam)()}
                   isLoading={createTeamMutation.isPending}
                 >
                   Create Team
@@ -399,7 +399,7 @@ const Teams: React.FC = () => {
                     type='number'
                     placeholder='Enter budget amount'
                     errorMessage={errors.budget?.message}
-                    defaultValue={selectedTeam?.budget || ''}
+                    defaultValue={selectedTeam?.budget?.toString() || ''}
                   />
                 </form>
               </ModalBody>
@@ -409,7 +409,7 @@ const Teams: React.FC = () => {
                 </Button>
                 <Button
                   color='primary'
-                  onPress={handleSubmit(handleUpdateTeam)}
+                  onPress={() => handleSubmit(handleUpdateTeam)()}
                   isLoading={updateTeamMutation.isPending}
                 >
                   Update Team

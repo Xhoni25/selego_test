@@ -119,6 +119,8 @@ export interface SearchRequest {
   search?: string;
   start_date?: string;
   end_date?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface LoginRequest {

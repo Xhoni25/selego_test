@@ -25,10 +25,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Tabs,
-  Tab,
   Progress,
-  Divider,
 } from '@nextui-org/react';
 import {
   Plus,
@@ -37,23 +34,15 @@ import {
   Trash2,
   Receipt,
   DollarSign,
-  Calendar,
   FileText,
   X,
   BarChart3,
   PieChart,
   TrendingUp,
-  Filter,
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import api from '../services/api';
-import {
-  Expense,
-  CreateExpenseRequest,
-  Team,
-  ExpenseCategory,
-  ExpenseStatus,
-} from '../types';
+import { Expense, CreateExpenseRequest, Team, ExpenseCategory } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -85,7 +74,7 @@ const Expenses: React.FC = () => {
       if (selectedCategory) params.append('category', selectedCategory);
       if (searchTerm) params.append('search', searchTerm);
 
-      return api.get<Expense[]>(`/expenses?${params.toString()}`);
+      return api.get<{ expenses: Expense[] }>(`/expenses?${params.toString()}`);
     },
   });
 
@@ -168,7 +157,7 @@ const Expenses: React.FC = () => {
     formState: { errors },
   } = useForm<CreateExpenseRequest>();
 
-  const expensesData = expenses?.data || [];
+  const expensesData = expenses?.data?.expenses || [];
   const teamsData = teams?.data || [];
 
   const categories: ExpenseCategory[] = [
@@ -799,7 +788,7 @@ const Expenses: React.FC = () => {
                 </Button>
                 <Button
                   color='primary'
-                  onPress={handleSubmit(handleCreateExpense)}
+                  onPress={() => handleSubmit(handleCreateExpense)()}
                   isLoading={createExpenseMutation.isPending}
                 >
                   Add Expense
@@ -889,7 +878,7 @@ const Expenses: React.FC = () => {
                 </Button>
                 <Button
                   color='primary'
-                  onPress={handleSubmit(handleUpdateExpense)}
+                  onPress={() => handleSubmit(handleUpdateExpense)()}
                   isLoading={updateExpenseMutation.isPending}
                 >
                   Update Expense
